@@ -1,0 +1,10 @@
+.env
+.env.*
+data/
+scripts/__pycache__/
+*.pyc
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.env
+dashboard/.env.*
+
