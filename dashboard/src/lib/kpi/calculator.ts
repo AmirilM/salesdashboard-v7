@@ -178,11 +178,11 @@ export const calculateCardData = (
   const totalRevenue = data.reduce((sum, item) => sum + Number(item.localamount || 0), 0);
 
   const cardConfigs = [
-    { name: 'TOTAL', icon: '💰', getRevenue: () => totalRevenue, getTarget: () => targetTotals.total },
-    { name: 'APPLE', icon: '🍎', getRevenue: () => kpiGroupTotals.APPLE, getTarget: () => targetTotals.apple },
-    { name: 'ANDROID', icon: '🤖', getRevenue: () => kpiGroupTotals.ANDROID, getTarget: () => targetTotals.android },
-    { name: 'ACCESSORIES', icon: '🎧', getRevenue: () => kpiGroupTotals.ACCESSORIES, getTarget: () => targetTotals.accessories },
-    { name: 'VAS', icon: '⚡', getRevenue: () => kpiGroupTotals.VAS, getTarget: () => targetTotals.vas },
+    { name: 'TOTAL', iconName: 'DollarSign', getRevenue: () => totalRevenue, getTarget: () => targetTotals.total },
+    { name: 'APPLE', iconName: 'Smartphone', getRevenue: () => kpiGroupTotals.APPLE, getTarget: () => targetTotals.apple },
+    { name: 'ANDROID', iconName: 'Smartphone', getRevenue: () => kpiGroupTotals.ANDROID, getTarget: () => targetTotals.android },
+    { name: 'ACCESSORIES', iconName: 'Headphones', getRevenue: () => kpiGroupTotals.ACCESSORIES, getTarget: () => targetTotals.accessories },
+    { name: 'VAS', iconName: 'Zap', getRevenue: () => kpiGroupTotals.VAS, getTarget: () => targetTotals.vas },
   ];
 
   return cardConfigs.map(config => {
@@ -195,7 +195,7 @@ export const calculateCardData = (
 
     return {
       name: config.name,
-      icon: config.icon,
+      iconName: config.iconName,
       target,
       revenue,
       variance,

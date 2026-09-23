@@ -52,7 +52,7 @@ export interface KpiPerformance {
 
 export interface CardData {
   name: string;
-  icon: string;
+  iconName: string;
   target: number;
   revenue: number;
   variance: number;

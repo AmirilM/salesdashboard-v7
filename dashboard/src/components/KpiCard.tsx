@@ -1,4 +1,12 @@
+import { DollarSign, Smartphone, Headphones, Zap } from 'lucide-react';
 import type { CardData } from '../lib/kpi/types';
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  DollarSign,
+  Smartphone,
+  Headphones,
+  Zap,
+};
 
 const STATUS_BG = {
   good: 'bg-green-50 border-green-200',
@@ -23,12 +31,14 @@ const formatCurrency = (value: number): string => {
 };
 
 export const KpiCard = ({ card }: { card: CardData }) => {
+  const IconComponent = iconMap[card.iconName] || DollarSign;
+
   return (
     <div className={`bg-white rounded-xl shadow-sm border ${STATUS_BG[card.status.level]} p-4 flex flex-col justify-between`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">{card.icon}</span>
+          <IconComponent className="h-5 w-5 text-gray-600" />
           <span className="font-bold text-sm text-gray-700 uppercase">{card.name}</span>
         </div>
         <span className={`text-xs font-semibold px-2 py-1 rounded-full ${STATUS_BG[card.status.level]} ${STATUS_TEXT[card.status.level]}`}>
