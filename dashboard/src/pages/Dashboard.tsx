@@ -4,27 +4,31 @@ import { fetchKpiData } from '../lib/kpi/fetch';
 import { calculateKpiSummary } from '../lib/kpi/calculator';
 import type { KpiSummary } from '../lib/kpi/types';
 import { KpiCard } from '../components/KpiCard';
+import { useStore } from '../contexts/StoreContext';
 
 export const Dashboard = () => {
   const [kpiData, setKpiData] = useState<KpiSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { selectedStoreCode } = useStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { sales, targets } = await fetchKpiData(1000);
+        setLoading(true);
+        const { sales, targets } = await fetchKpiData(1000, selectedStoreCode);
         const summary = calculateKpiSummary(sales, targets);
         setKpiData(summary);
-        setLoading(false);
+        setError(null);
       } catch (err: any) {
         setError(err.message || 'Unknown error');
+      } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [selectedStoreCode]);
 
   return (
     <>
