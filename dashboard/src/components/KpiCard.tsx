@@ -1,35 +1,16 @@
-import { DollarSign, Smartphone, Headphones, Zap } from 'lucide-react';
+import { DollarSign, Smartphone, Headphones, Zap, MoreHorizontal, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import type { CardData } from '../lib/kpi/types';
-
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  DollarSign,
-  Smartphone,
-  Headphones,
-  Zap,
-};
-
-const STATUS_BG = {
-  good: 'bg-green-50 border-green-200',
-  warning: 'bg-yellow-50 border-yellow-200',
-  danger: 'bg-red-50 border-red-200',
-};
-
-const STATUS_TEXT = {
-  good: 'text-green-600',
-  warning: 'text-yellow-600',
-  danger: 'text-red-600',
-};
+import { STATUS_THRESHOLDS } from '../lib/kpi/types';
 
 const STATUS_ICON = {
-  good: 'bg-green-100 text-green-600',
-  warning: 'bg-yellow-100 text-yellow-600',
-  danger: 'bg-red-100 text-red-600',
+  good: 'text-emerald-500 bg-emerald-50',
+  warning: 'text-amber-500 bg-amber-50',
+  danger: 'text-rose-500 bg-rose-50',
 };
 
 const truncateValue = (value: number): string => {
   const rounded = Math.round(value);
   const formatted = rounded.toLocaleString('id-ID');
-  // If too long, use abbreviated format
   if (formatted.length > 15) {
     if (rounded >= 1_000_000_000) {
       return `Rp ${(rounded / 1_000_000_000).toFixed(0)}M`;
@@ -42,61 +23,67 @@ const truncateValue = (value: number): string => {
 };
 
 export const KpiCard = ({ card }: { card: CardData }) => {
-  const IconComponent = iconMap[card.iconName] || DollarSign;
+  const IconComponent = card.iconName === 'DollarSign' ? DollarSign :
+    card.iconName === 'Smartphone' ? Smartphone :
+    card.iconName === 'Headphones' ? Headphones : Zap;
+
+  const isAboveTarget = card.achievementPercent >= STATUS_THRESHOLDS.good;
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border ${STATUS_BG[card.status.level]} p-4 flex flex-col gap-2`}>
+    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-50 flex flex-col justify-between">
       {/* Header */}
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <div className={`p-1.5 rounded ${STATUS_ICON[card.status.level]} flex-shrink-0`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <div className={`p-1.5 rounded-lg ${STATUS_ICON[card.status.level]}`}>
             <IconComponent className="h-4 w-4" />
           </div>
-          <span className="font-bold text-xs text-gray-800 truncate">{card.name}</span>
+          <span className="font-semibold text-xs text-gray-600">{card.name}</span>
         </div>
-        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${STATUS_BG[card.status.level]} ${STATUS_TEXT[card.status.level]}`}>
-          {card.achievementPercent.toFixed(0)}%
-        </span>
+        <button className="text-gray-400 hover:text-gray-600 transition-colors">
+          <MoreHorizontal className="h-4 w-4" />
+        </button>
       </div>
 
-      {/* Metrics */}
-      <div className="flex flex-col gap-1.5 text-[11px] flex-1 justify-center">
-        <div className="flex justify-between items-center">
-          <span className="text-gray-500">Target</span>
-          <span className="text-gray-900 font-semibold whitespace-nowrap">{truncateValue(card.target)}</span>
+      {/* Main Metric */}
+      <div className="mb-4">
+        <div className="text-2xl font-bold text-[#1A1A2E] tracking-tight">
+          {truncateValue(card.revenue)}
         </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-500">Revenue</span>
-          <span className="text-gray-900 font-semibold whitespace-nowrap">{truncateValue(card.revenue)}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-500">Variance</span>
-          <span className={`font-semibold whitespace-nowrap ${card.variance < 0 ? 'text-red-600' : 'text-green-600'}`}>
-            {card.variance < 0 ? '-' : '+'}{truncateValue(Math.abs(card.variance))}
-          </span>
-        </div>
-        <div className="border-t border-gray-100 my-0.5"></div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-500">Estimasi</span>
-          <span className="text-blue-600 font-semibold whitespace-nowrap">{truncateValue(card.estimated)}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-500">Est. %</span>
-          <span className="text-blue-600 font-semibold">{card.estimatedPercent.toFixed(0)}%</span>
-        </div>
+      </div>
+
+      {/* Trend */}
+      <div className="flex items-center gap-1.5 text-xs">
+        <span className={`inline-flex items-center font-semibold ${isAboveTarget ? 'text-emerald-500' : 'text-rose-500'}`}>
+          {isAboveTarget ? (
+            <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
+          ) : (
+            <ArrowDownRight className="h-3.5 w-3.5 mr-0.5" />
+          )}
+          {card.achievementPercent.toFixed(0)}%
+        </span>
+        <span className="text-gray-400">vs Target {truncateValue(card.target)}</span>
       </div>
 
       {/* Progress bar */}
-      <div className="mt-auto pt-1">
-        <div className="w-full bg-gray-200 rounded-full h-1.5">
-          <div
-            className={`h-1.5 rounded-full transition-all ${
-              card.achievementPercent >= 100 ? 'bg-green-500' :
-              card.achievementPercent >= 80 ? 'bg-yellow-500' : 'bg-red-500'
-            }`}
-            style={{ width: `${Math.min(card.achievementPercent, 100)}%` }}
-          ></div>
-        </div>
+      <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden mt-3">
+        <div
+          className={`h-full rounded-full transition-all duration-500 ${
+            card.achievementPercent >= 100
+              ? 'bg-[#6B4C9A]'
+              : card.achievementPercent >= 80
+              ? 'bg-purple-400'
+              : 'bg-rose-400'
+          }`}
+          style={{ width: `${Math.min(card.achievementPercent, 100)}%` }}
+        />
+      </div>
+
+      {/* Footer */}
+      <div className="flex justify-between items-center text-[10px] text-gray-400 mt-2 pt-2 border-t border-gray-50">
+        <span>Est: {truncateValue(card.estimated)}</span>
+        <span className={card.variance >= 0 ? 'text-emerald-600' : 'text-rose-500'}>
+          {card.variance >= 0 ? '+' : ''}{truncateValue(card.variance)}
+        </span>
       </div>
     </div>
   );
