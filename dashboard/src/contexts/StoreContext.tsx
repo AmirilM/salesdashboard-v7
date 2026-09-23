@@ -23,26 +23,34 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchStores = async () => {
       try {
-        // Fetch unique store_code + store_name from data_sales_transactions (UPPERCASE format)
-        const { data, error } = await supabase
-          .from('data_sales_transactions')
+        // Fetch ALL stores from master_target first (to ensure complete list)
+        const { data: targetData, error: targetError } = await supabase
+          .from('master_target')
           .select('store_code, store_name')
-          .order('store_name');
+          .order('store_code');
 
-        if (error) throw error;
+        if (targetError) throw targetError;
 
-        // Deduplicate by store_code (keep first occurrence which has UPPERCASE name)
-        const uniqueStores = new Map<string, string>();
-        (data || []).forEach(item => {
-          if (!uniqueStores.has(item.store_code)) {
-            uniqueStores.set(item.store_code, item.store_name);
+        // Fetch unique store names from data_sales_transactions (UPPERCASE format)
+        const { data: salesData, error: salesError } = await supabase
+          .from('data_sales_transactions')
+          .select('store_code, store_name');
+
+        if (salesError) throw salesError;
+
+        // Build map of store_code -> UPPERCASE store_name from sales
+        const salesStoreNames = new Map<string, string>();
+        (salesData || []).forEach(item => {
+          if (item.store_name && !salesStoreNames.has(item.store_code)) {
+            salesStoreNames.set(item.store_code, item.store_name);
           }
         });
 
-        const storeList: Store[] = Array.from(uniqueStores.entries()).map(([code, name]) => ({
-          store_code: code,
-          store_name: name,
-        }));
+        // Build complete store list sorted by store_code ASC
+        const storeList: Store[] = (targetData || []).map(item => ({
+          store_code: item.store_code,
+          store_name: salesStoreNames.get(item.store_code) || item.store_name,
+        })).sort((a, b) => a.store_code.localeCompare(b.store_code));
 
         setStores(storeList);
       } catch (err) {
