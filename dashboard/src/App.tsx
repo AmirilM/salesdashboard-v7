@@ -3,6 +3,10 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
+import { Daily } from './pages/Daily';
+import { Product } from './pages/Product';
+import { Report } from './pages/Report';
+import { Layout } from './components/Layout';
 
 function App() {
   return (
@@ -11,14 +15,18 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
-            path="/"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Layout />
               </ProtectedRoute>
             }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          >
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/daily" element={<Daily />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/report" element={<Report />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
