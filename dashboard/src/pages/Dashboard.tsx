@@ -39,7 +39,7 @@ export const Dashboard = () => {
       ) : error ? (
         <div className="bg-red-50 text-red-600 p-4 rounded-lg">{error}</div>
       ) : kpiData ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
           {kpiData.cards.map(card => (
             <KpiCard key={card.name} card={card} />
           ))}
