@@ -50,6 +50,18 @@ export interface KpiPerformance {
   status: StatusResult;
 }
 
+export interface CardData {
+  name: string;
+  icon: string;
+  target: number;
+  revenue: number;
+  variance: number;
+  achievementPercent: number;
+  estimated: number;
+  estimatedPercent: number;
+  status: StatusResult;
+}
+
 export interface StorePerformance {
   store_code: string;
   store_name: string;
@@ -69,6 +81,7 @@ export interface KpiSummary {
   status: StatusResult;
   kpiGroups: KpiPerformance[];
   stores: StorePerformance[];
+  cards: CardData[];
   estimatedRevenue?: number;
   estimatedAchievement?: number;
   timeGone?: number;

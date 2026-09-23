@@ -5,6 +5,7 @@ import type {
   TargetTotals,
   StatusResult,
   KpiPerformance,
+  CardData,
   StorePerformance,
   KpiSummary,
 } from './types';
@@ -160,8 +161,48 @@ export const calculateKpiSummary = (
     status: getStatus(achievementPercent),
     kpiGroups: calculateKpiGroupPerformance(kpiGroupTotals, targetTotals),
     stores: calculateStorePerformance(data, targets),
+    cards: calculateCardData(data, targets, currentDate),
     estimatedRevenue,
     estimatedAchievement,
     timeGone,
   };
+};
+
+export const calculateCardData = (
+  data: SalesTransaction[],
+  targets: MasterTarget[],
+  currentDate: Date = new Date()
+): CardData[] => {
+  const kpiGroupTotals = calculateKpiGroupTotals(data);
+  const targetTotals = calculateTargetTotals(targets);
+  const totalRevenue = data.reduce((sum, item) => sum + Number(item.localamount || 0), 0);
+
+  const cardConfigs = [
+    { name: 'TOTAL', icon: '💰', getRevenue: () => totalRevenue, getTarget: () => targetTotals.total },
+    { name: 'APPLE', icon: '🍎', getRevenue: () => kpiGroupTotals.APPLE, getTarget: () => targetTotals.apple },
+    { name: 'ANDROID', icon: '🤖', getRevenue: () => kpiGroupTotals.ANDROID, getTarget: () => targetTotals.android },
+    { name: 'ACCESSORIES', icon: '🎧', getRevenue: () => kpiGroupTotals.ACCESSORIES, getTarget: () => targetTotals.accessories },
+    { name: 'VAS', icon: '⚡', getRevenue: () => kpiGroupTotals.VAS, getTarget: () => targetTotals.vas },
+  ];
+
+  return cardConfigs.map(config => {
+    const revenue = config.getRevenue();
+    const target = config.getTarget();
+    const variance = revenue - target;
+    const achievementPercent = target > 0 ? (revenue / target) * 100 : 0;
+    const estimated = calculateEstimatedRevenue(revenue, currentDate);
+    const estimatedPercent = target > 0 ? (estimated / target) * 100 : 0;
+
+    return {
+      name: config.name,
+      icon: config.icon,
+      target,
+      revenue,
+      variance,
+      achievementPercent,
+      estimated,
+      estimatedPercent,
+      status: getStatus(achievementPercent),
+    };
+  });
 };
