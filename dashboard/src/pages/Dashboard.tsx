@@ -86,20 +86,23 @@ export const Dashboard = () => {
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Area Chart */}
-            <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-50">
+            <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-50 flex flex-col min-w-0">
               <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h3 className="text-gray-400 text-xs font-medium mb-1">Total Sales</h3>
-                  <div className="text-3xl font-bold text-[#1A1A2E] mb-2">$272,560</div>
-                  <div className="flex items-center text-xs">
-                    <span className="inline-flex items-center text-rose-500 font-semibold mr-2">
-                      <ArrowDownRight className="h-3.5 w-3.5 mr-0.5" /> 5.6%
+                <div className="min-w-0 pr-4">
+                  <h3 className="text-gray-400 text-xs font-medium mb-1 truncate">Total Sales</h3>
+                  <div className="text-3xl font-bold text-[#1A1A2E] mb-2 truncate" title={kpiData.totalRevenue.toLocaleString('id-ID')}>
+                    Rp {kpiData.totalRevenue.toLocaleString('id-ID')}
+                  </div>
+                  <div className="flex items-center text-xs min-w-0">
+                    <span className={`inline-flex items-center shrink-0 font-semibold mr-2 ${kpiData.status.level === 'danger' ? 'text-rose-500' : 'text-emerald-500'}`}>
+                      {kpiData.status.level === 'danger' ? <ArrowDownRight className="h-3.5 w-3.5 mr-0.5" /> : <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />} 
+                      {kpiData.achievementPercent.toFixed(1)}%
                     </span>
-                    <span className="text-gray-400">Slight decline compared to last month</span>
+                    <span className="text-gray-400 truncate">Achievement against target</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <button className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-xs font-medium text-gray-600">
+                <div className="flex items-center gap-3 shrink-0">
+                  <button className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-xs font-medium text-gray-600 truncate">
                     <Calendar className="h-3.5 w-3.5" /> Monthly
                   </button>
                   <button className="text-gray-400 hover:text-gray-600">
@@ -117,7 +120,7 @@ export const Dashboard = () => {
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#A0AEC0' }} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#A0AEC0' }} tickFormatter={(val) => `$${val}K`} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#A0AEC0' }} tickFormatter={(val) => `${(val/1000).toFixed(0)}K`} />
                     <Tooltip 
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                       itemStyle={{ color: '#1A1A2E', fontWeight: 'bold' }}
@@ -129,18 +132,20 @@ export const Dashboard = () => {
             </div>
 
             {/* Bar Chart */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 flex flex-col">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 flex flex-col min-w-0">
               <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h3 className="text-gray-400 text-xs font-medium mb-1">Monthly Visitor</h3>
-                  <div className="text-3xl font-bold text-[#1A1A2E] mb-2">9,540</div>
-                  <div className="flex items-center text-xs">
-                    <span className="inline-flex items-center text-emerald-500 font-semibold mr-2">
-                      <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" /> 4.3%
+                <div className="min-w-0 pr-4">
+                  <h3 className="text-gray-400 text-xs font-medium mb-1 truncate">Total Transactions</h3>
+                  <div className="text-3xl font-bold text-[#1A1A2E] mb-2 truncate" title={kpiData.totalTransactions.toLocaleString('id-ID')}>
+                    {kpiData.totalTransactions.toLocaleString('id-ID')}
+                  </div>
+                  <div className="flex items-center text-xs min-w-0">
+                    <span className="inline-flex items-center shrink-0 text-emerald-500 font-semibold mr-2">
+                      <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" /> Active
                     </span>
                   </div>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">
+                <button className="text-gray-400 hover:text-gray-600 shrink-0">
                   <MoreHorizontal className="h-5 w-5" />
                 </button>
               </div>
@@ -163,20 +168,22 @@ export const Dashboard = () => {
 
           {/* Bottom Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-50">
+            <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-50 min-w-0">
               <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h3 className="text-gray-400 text-xs font-medium mb-1">Customer Breakdown</h3>
-                  <div className="text-3xl font-bold text-[#1A1A2E] mb-2">412</div>
-                  <div className="flex items-center text-xs">
-                    <span className="inline-flex items-center text-emerald-500 font-semibold mr-2">
-                      <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" /> 3.3%
+                <div className="min-w-0 pr-4">
+                  <h3 className="text-gray-400 text-xs font-medium mb-1 truncate">Total Items Sold</h3>
+                  <div className="text-3xl font-bold text-[#1A1A2E] mb-2 truncate" title={kpiData.totalItems.toLocaleString('id-ID')}>
+                    {kpiData.totalItems.toLocaleString('id-ID')}
+                  </div>
+                  <div className="flex items-center text-xs min-w-0">
+                    <span className="inline-flex items-center shrink-0 text-emerald-500 font-semibold mr-2">
+                      <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" /> High
                     </span>
-                    <span className="text-gray-400">Slight improvement in customer retention</span>
+                    <span className="text-gray-400 truncate">Volume movement</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <button className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-xs font-medium text-gray-600">
+                <div className="flex items-center gap-3 shrink-0">
+                  <button className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-xs font-medium text-gray-600 truncate">
                     <Calendar className="h-3.5 w-3.5" /> Monthly
                   </button>
                   <button className="text-gray-400 hover:text-gray-600">
@@ -203,21 +210,21 @@ export const Dashboard = () => {
             </div>
 
             {/* Promo Card */}
-            <div className="bg-gradient-to-br from-[#6B4C9A] to-[#483269] rounded-2xl p-8 shadow-sm flex flex-col justify-center relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#6B4C9A] to-[#483269] rounded-2xl p-8 shadow-sm flex flex-col justify-center relative overflow-hidden min-w-0">
               <div className="absolute top-0 right-0 p-8 opacity-20">
                 <TrendingUp className="h-32 w-32 text-white" />
               </div>
               <div className="relative z-10">
-                <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center mb-6 backdrop-blur-sm">
+                <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center mb-6 backdrop-blur-sm shrink-0">
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">
+                <h3 className="text-2xl font-bold text-white mb-3 break-words">
                   Upgrade the Way You Manage Sales
                 </h3>
-                <p className="text-purple-100 text-sm mb-8 leading-relaxed max-w-[85%]">
+                <p className="text-purple-100 text-sm mb-8 leading-relaxed max-w-[85%] break-words">
                   Gain real-time insights, streamline operations, and drive smarter growth decisions.
                 </p>
-                <button className="bg-white text-[#6B4C9A] font-bold text-sm px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors shadow-sm self-start">
+                <button className="bg-white text-[#6B4C9A] font-bold text-sm px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors shadow-sm self-start truncate max-w-full">
                   Upgrade Now
                 </button>
               </div>
