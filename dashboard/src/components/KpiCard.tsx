@@ -41,9 +41,9 @@ export const KpiCard = ({ card }: { card: CardData }) => {
   const statusLevel = card.status.level;
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-50 flex flex-col justify-between min-w-0">
+    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-50 flex flex-col min-w-0 h-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 min-w-0">
           <div className={`p-1.5 rounded-lg shrink-0 ${STATUS_ICON[statusLevel]}`}>
             <IconComponent className="h-4 w-4" />
@@ -56,7 +56,7 @@ export const KpiCard = ({ card }: { card: CardData }) => {
       </div>
 
       {/* Main Metric */}
-      <div className="mb-4">
+      <div className="mb-3">
         <div className="text-2xl font-bold text-[#1A1A2E] tracking-tight truncate" title={card.revenue.toLocaleString('id-ID')}>
           {truncateValue(card.revenue)}
         </div>
@@ -77,22 +77,23 @@ export const KpiCard = ({ card }: { card: CardData }) => {
         </span>
       </div>
 
-      {/* Progress bar */}
-      <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden mt-3 shrink-0">
-        <div
-          className={`h-full rounded-full transition-all duration-500 ${BAR_COLOR[statusLevel]}`}
-          style={{ width: `${Math.min(card.achievementPercent, 100)}%` }}
-        />
-      </div>
+      {/* Progress bar + Footer (pinned bottom so all cards align) */}
+      <div className="mt-auto pt-4">
+        <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden shrink-0">
+          <div
+            className={`h-full rounded-full transition-all duration-500 ${BAR_COLOR[statusLevel]}`}
+            style={{ width: `${Math.min(card.achievementPercent, 100)}%` }}
+          />
+        </div>
 
-      {/* Footer */}
-      <div className="flex justify-between items-center text-[10px] text-gray-400 mt-3 pt-3 border-t border-gray-50 min-w-0">
-        <span className="truncate pr-2" title={`Estimasi: ${card.estimated.toLocaleString('id-ID')}`}>
-          Est: {truncateValue(card.estimated)}
-        </span>
-        <span className={`font-medium shrink-0 ${card.variance >= 0 ? 'text-emerald-600' : 'text-rose-500'}`} title={`Variance: ${card.variance.toLocaleString('id-ID')}`}>
-          {card.variance >= 0 ? '+' : ''}{truncateValue(card.variance)}
-        </span>
+        <div className="flex justify-between items-center text-[10px] text-gray-400 mt-3 pt-3 border-t border-gray-50 min-w-0">
+          <span className="truncate pr-2" title={`Estimasi: ${card.estimated.toLocaleString('id-ID')}`}>
+            Est: {truncateValue(card.estimated)}
+          </span>
+          <span className={`font-medium shrink-0 ${card.variance >= 0 ? 'text-emerald-600' : 'text-rose-500'}`} title={`Variance: ${card.variance.toLocaleString('id-ID')}`}>
+            {card.variance >= 0 ? '+' : ''}{truncateValue(card.variance)}
+          </span>
+        </div>
       </div>
     </div>
   );

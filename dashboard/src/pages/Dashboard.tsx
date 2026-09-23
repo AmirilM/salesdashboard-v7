@@ -77,7 +77,7 @@ export const Dashboard = () => {
         <div className="bg-red-50 text-red-600 p-4 rounded-xl">{error}</div>
       ) : kpiData ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-6">
             {kpiData.cards.map(card => (
               <KpiCard key={card.name} card={card} />
             ))}
@@ -149,7 +149,7 @@ export const Dashboard = () => {
                   <MoreHorizontal className="h-5 w-5" />
                 </button>
               </div>
-              <div className="flex-1 h-48 w-full mt-auto">
+              <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={barData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#A0AEC0' }} dy={10} />
@@ -168,7 +168,7 @@ export const Dashboard = () => {
 
           {/* Bottom Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-50 min-w-0">
+            <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-50 flex flex-col min-w-0">
               <div className="flex justify-between items-start mb-6">
                 <div className="min-w-0 pr-4">
                   <h3 className="text-gray-400 text-xs font-medium mb-1 truncate">Total Items Sold</h3>
@@ -191,7 +191,7 @@ export const Dashboard = () => {
                   </button>
                 </div>
               </div>
-              <div className="h-48 w-full">
+              <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={areaData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                     <defs>
@@ -224,7 +224,7 @@ export const Dashboard = () => {
                 <p className="text-purple-100 text-sm mb-8 leading-relaxed max-w-[85%] break-words">
                   Gain real-time insights, streamline operations, and drive smarter growth decisions.
                 </p>
-                <button className="bg-white text-[#6B4C9A] font-bold text-sm px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors shadow-sm self-start truncate max-w-full">
+                <button className="bg-white text-[#6B4C9A] font-bold text-sm px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors shadow-sm inline-block max-w-full truncate">
                   Upgrade Now
                 </button>
               </div>
