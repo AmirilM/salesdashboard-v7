@@ -23,13 +23,28 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchStores = async () => {
       try {
+        // Fetch unique store_code + store_name from data_sales_transactions (UPPERCASE format)
         const { data, error } = await supabase
-          .from('master_target')
+          .from('data_sales_transactions')
           .select('store_code, store_name')
           .order('store_name');
 
         if (error) throw error;
-        setStores(data || []);
+
+        // Deduplicate by store_code (keep first occurrence which has UPPERCASE name)
+        const uniqueStores = new Map<string, string>();
+        (data || []).forEach(item => {
+          if (!uniqueStores.has(item.store_code)) {
+            uniqueStores.set(item.store_code, item.store_name);
+          }
+        });
+
+        const storeList: Store[] = Array.from(uniqueStores.entries()).map(([code, name]) => ({
+          store_code: code,
+          store_name: name,
+        }));
+
+        setStores(storeList);
       } catch (err) {
         console.error('Failed to fetch stores:', err);
       } finally {
